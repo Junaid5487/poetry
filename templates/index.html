@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Poetry Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>✨ AI Poetry Generator ✨</h1>
+    <p>Describe a theme and choose a language. Get a poem crafted by AI.</p>
+
+    <select id="language">
+      <option value="English">English</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Spanish">Spanish</option>
+      <option value="French">French</option>
+      <option value="Tamil">Tamil</option>
+      <option value="Any">Any language (specify in theme)</option>
+    </select>
+
+    <textarea id="theme" placeholder="Describe the theme (e.g., sadness, hope, monsoon love)"></textarea>
+    <button onclick="generatePoem()">Generate Poem</button>
+
+    <pre id="poemDisplay">Your poem will appear here...</pre>
+  </div>
+
+  <script>
+    async function generatePoem() {
+      const language = document.getElementById("language").value;
+      const theme = document.getElementById("theme").value;
+      const result = document.getElementById("poemDisplay");
+
+      result.innerText = "Generating...";
+
+      const res = await fetch("/generate_poem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language, theme })
+      });
+
+      const data = await res.json();
+      result.innerText = data.poem || "Error: " + data.error;
+    }
+  </script>
+</body>
+</html>
